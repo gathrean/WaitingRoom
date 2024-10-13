@@ -6,7 +6,6 @@ public class taskManagement : MonoBehaviour
 {
 
     public taskDisplay taskDisplay;
-    
     public int taskCount;
     public GameObject taskTrigger;
 
@@ -42,7 +41,6 @@ public class taskManagement : MonoBehaviour
         }
     };
 
-
     public List<Task> tasksActive = new List<Task>
     {
         new Task("dummy", "dummy", 999, false, false, "dummy", 110000)
@@ -68,17 +66,19 @@ public class taskManagement : MonoBehaviour
     public int makeTask(string taskNameIN, string objective, int priority, bool active, bool complete, string type, int ID)
     {
         tasksActive.Add(new Task(taskNameIN, objective, priority, active, complete, type, ID) 
-        {
-            taskName = taskNameIN,
-            taskObjective = objective,
-            taskPriority = priority,
-            taskActive = active,
-            taskComplete = complete,
-            taskType = type,
-            taskID = ID
-        }
+            {
+                taskName = taskNameIN,
+                taskObjective = objective,
+                taskPriority = priority,
+                taskActive = active,
+                taskComplete = complete,
+                taskType = type,
+                taskID = ID
+            }
         );
 
+        taskDisplay.updateTaskDisplay(taskNameIN, objective);
+        
         return (tasksActive.Count - 1);
     }
 
@@ -86,28 +86,34 @@ public class taskManagement : MonoBehaviour
     {
         for(int i = 0; i <= (tasksActive.Count - 1); i++)
         {
-            Debug.Log("taskManagement.cs: completeTask: for loop at i=" + i);
-
             int checkID = tasksActive[ID].taskID;
 
             if(checkID == ID)
             {
-                Debug.Log("taskManagement.cs: completeTask: match found!");
-
                 taskComplete.Add(new Task(tasksActive[i].taskName,tasksActive[i].taskObjective,tasksActive[i].taskPriority,false,true,tasksActive[i].taskType,tasksActive[i].taskID));
-                Debug.Log("taskManagement.cs: completeTask: active Task moved to taskComplete list");
                 tasksActive.RemoveAt(i);
-                Debug.Log("taskManagement.cs: completeTask: completed Task removed from tasksActive list");
-
-                // ID in tasksActive
 
                 return;
             }
-            else
-            {
-                Debug.Log("taskManagement.cs: completeTask: no match at i=" + i);
-            };
-            //taskComplete
         }
+    }
+
+    // determmines whether a given ID at a given index in the tasksActive list matches
+    public bool checkActiveIDexists(int ID, int i)
+    {
+        bool value = false;
+
+        if(tasksActive[i].taskID == ID)
+        {
+            value = true;
+            return value;
+        }
+
+        return value;
+    }
+
+    public string returnActiveTaskName(int i)
+    {
+        return tasksActive[i].taskName;
     }
 }
